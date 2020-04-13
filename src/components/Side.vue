@@ -15,8 +15,12 @@
             <i class="el-icon-document-copy"></i>
             <span>文章管理</span>
           </template>
-          <el-menu-item index="1-1">文章列表</el-menu-item>
-          <el-menu-item index="1-2">发布文章</el-menu-item>
+          <router-link to="/post-list">
+            <el-menu-item index="1-1">文章列表</el-menu-item>
+          </router-link>
+          <router-link to="/new-post">
+            <el-menu-item index="1-2">文章发布</el-menu-item>
+          </router-link>
         </el-submenu>
       </el-menu>
     </el-col>
@@ -41,7 +45,7 @@ export default {
   background-color: #545c64;
   color: #333;
   text-align: center;
-  height: 100vh;
+  height: 100%;
 }
 
 .el-main {
