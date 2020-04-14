@@ -81,7 +81,6 @@ export default {
   background-color: #545c64;
   color: #333;
   text-align: center;
-  height: 100vh;
 }
 
 .el-main {
@@ -89,6 +88,8 @@ export default {
   color: #333;
   text-align: center;
   line-height: 160px;
+  overflow-y: auto;
+  height: 100vh;
 }
 
 .el-container:nth-child(5) .el-aside,
