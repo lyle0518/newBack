@@ -10,7 +10,9 @@ const routes = [
   },
   {
     path: "/",
+    // 重定向设置
     component: () => import("@/views/Index"),
+    redirect: "/post-list",
     children: [
       {
         path: "post-list",
@@ -19,6 +21,10 @@ const routes = [
       {
         path: "new-post",
         component: () => import("@/views/new-post")
+      },
+      {
+        path: "edit-post/:id",
+        component: () => import("@/views/EditPost")
       }
     ]
   }

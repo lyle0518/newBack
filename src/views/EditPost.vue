@@ -1,6 +1,7 @@
 <template>
   <div>
-    <el-form ref="form" :model="form" label-width="80px">
+    <h2>编辑文章页面</h2>
+    <el-form ref="form" :model="form" label-width="80px" class="form">
       <el-form-item label="标题">
         <el-input v-model="form.title"></el-input>
       </el-form-item>
@@ -55,7 +56,7 @@
       </el-form-item>
 
       <!-- 图片上传 -->
-
+      <!-- :file-list="fileList"  上传的图片列表 -->
       <el-form-item label="封面上传">
         <el-upload
           :action="$axios.defaults.baseURL+'/upload'"
@@ -66,6 +67,7 @@
           list-type="picture-card"
           :on-preview="handlePictureCardPreview"
           :on-remove="photoRemove"
+          :file-list="fileList"
         >
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -75,7 +77,7 @@
       </el-form-item>
       <!-- 提交按钮 -->
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">发布</el-button>
+        <el-button type="primary" @click="onSubmit">编辑</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -106,6 +108,7 @@ export default {
       dialogVisible: false,
       menus: [],
       token: "",
+      //   存储上传的图片列表地址
       fileList: []
     };
   },
@@ -120,6 +123,24 @@ export default {
       // 不需要头条的栏目.头条有所有文章类型
       data.splice(0, 1);
       this.menus = data;
+    });
+    //请求文章数据
+    this.$axios({
+      url: "/post/" + this.$route.params.id
+    }).then(res => {
+      const { data } = res.data;
+      console.log(data);
+
+      this.form.title = data.title;
+      this.form.type = data.type;
+      this.form.content = data.content;
+      this.form.categories = data.categories.map(v => {
+        return v.id;
+      });
+      this.fileList = data.cover.map(v => {
+        v.url = this.$axios.defaults.baseURL + v.url;
+        return v;
+      });
     });
   },
   methods: {
@@ -162,7 +183,9 @@ export default {
     // 图片上传成功触发
     handleImgSuccess(response, file, fileList) {
       console.log(fileList);
+
       this.fileList = fileList;
+      console.log(this.fileList);
     },
     // 视频上传事件
     handleVideoSuccess(response, file, fileList) {
@@ -181,7 +204,7 @@ export default {
       // 上传图片的id
       this.form.cover = this.fileList.map(v => {
         return {
-          id: v.response.data.id
+          id: v.id || v.response.data.id
         };
       });
       console.log(this.form);
@@ -217,7 +240,7 @@ export default {
       if (!flag) return;
       // 发送请求
       this.$axios({
-        url: "/post",
+        url: "/post_update/" + this.$route.params.id,
         method: "POST",
         data: this.form,
         headers: {
@@ -226,6 +249,7 @@ export default {
       }).then(res => {
         const { message } = res.data;
         this.$message.success(message);
+        this.$router.replace("/post-list");
       });
     }
   }
@@ -235,5 +259,8 @@ export default {
 <style scoped lang="less">
 .editor /deep/ .el-form-item__content {
   line-height: 0;
+}
+.form {
+  margin-top: 40px;
 }
 </style>

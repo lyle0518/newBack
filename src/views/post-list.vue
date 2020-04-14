@@ -3,21 +3,25 @@
     <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="title" label="标题" width="180"></el-table-column>
       <el-table-column label="类型" width="180">
-        <template slot-scope="scope">{{
+        <template slot-scope="scope">
+          {{
           scope.row.type === 1 ? "文章" : "视频"
-        }}</template>
+          }}
+        </template>
       </el-table-column>
       <el-table-column prop="address" label="时间">
-        <template slot-scope="scope">{{
+        <template slot-scope="scope">
+          {{
           moment(scope.row.create_date).format("YYYY-MM-DD hh:mm:ss")
-        }}</template>
+          }}
+        </template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.row)"
-            >删除</el-button
-          >
+          <router-link :to="`edit-post/${scope.row.id}`">
+            <el-button size="mini">编辑</el-button>
+          </router-link>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -32,8 +36,7 @@
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
-      >
-      </el-pagination>
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -56,9 +59,6 @@ export default {
     this.getList();
   },
   methods: {
-    handleEdit(item) {
-      console.log(index, row);
-    },
     // 删除文章
     handleDelete(item) {
       this.$confirm("此操作将永久删除该文章, 是否继续?", "提示", {
